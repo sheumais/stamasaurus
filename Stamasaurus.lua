@@ -45,6 +45,7 @@ function STNS.PowerUpdate(event, unitTag, powerIndex, powerType, powerValue, pow
         if (stamina_percentage > 0.4) then 
             -- stamina too high
             showUI()
+            if (stamina_percentage > 0.7) then CheckCoral() end
         else 
             hideUI()
         end
@@ -52,6 +53,7 @@ function STNS.PowerUpdate(event, unitTag, powerIndex, powerType, powerValue, pow
 end
 
 function STNS.CheckCoral()
+    if not CurrentlyEquipped then zo_callLater(function() STNS.CheckCoral() end, 1000) return end
     for i=1, table.getn(CurrentlyEquipped.set_names), 1 do
         local format_name = zo_strformat(SI_ABILITY_NAME, CurrentlyEquipped.set_names[i])
         --d(format_name)
@@ -85,7 +87,7 @@ local function Init(event, name)
 
     RegisterEvents()
     createUI()
-    zo_callLater(function() STNS.CheckCoral() end, 5000)
+    zo_callLater(function() STNS.CheckCoral() end, 10000)
 end
 
 EVENT_MANAGER:RegisterForEvent(STNS.name, EVENT_ADD_ON_LOADED, Init)
