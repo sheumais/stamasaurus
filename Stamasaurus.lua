@@ -53,7 +53,7 @@ function STNS.PowerUpdate(event, unitTag, powerIndex, powerType, powerValue, pow
 end
 
 function STNS.CheckCoral()
-    if not CurrentlyEquipped then DelayUpdate() return end
+    if not CurrentlyEquipped.set_names then STNS.DelayUpdate() return end
     for i=1, table.getn(CurrentlyEquipped.set_names), 1 do
         local format_name = zo_strformat(SI_ABILITY_NAME, CurrentlyEquipped.set_names[i])
         --d(format_name)
@@ -68,13 +68,13 @@ function STNS.CheckCoral()
     --d("Coral Riptide not equipped, unregistering for power updates")
 end
 
-local function DelayUpdate()
+function STNS.DelayUpdate()
     if IsUnitInCombat("player") then return end
     zo_callLater(function() STNS.CheckCoral() end, GetLatency() + 1000)
 end
 
 local function RegisterEvents()
-    EVENT_MANAGER:RegisterForEvent(STNS.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, DelayUpdate)
+    EVENT_MANAGER:RegisterForEvent(STNS.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, STNS.DelayUpdate)
     EVENT_MANAGER:AddFilterForEvent(STNS.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, REGISTER_FILTER_BAG_ID, BAG_WORN)
     EVENT_MANAGER:AddFilterForEvent(STNS.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, REGISTER_FILTER_IS_NEW_ITEM, false)
     EVENT_MANAGER:AddFilterForEvent(STNS.name, EVENT_INVENTORY_SINGLE_SLOT_UPDATE, REGISTER_FILTER_INVENTORY_UPDATE_REASON , INVENTORY_UPDATE_REASON_DEFAULT)
